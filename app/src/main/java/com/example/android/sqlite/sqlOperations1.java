@@ -46,4 +46,37 @@ public class sqlOperations1 extends SQLiteOpenHelper {
         //re-create table
         onCreate(db);
     }
+
+    //adding new entry
+    public void addEntry(Names names_obj){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL2, names_obj.getname());
+
+        db.insert(tblname,null, values);
+        db.close();
+    }
+
+    //getting all entries
+    public List<Names> GetAllEntries(){
+        List<Names> listobj = new ArrayList<Names>();
+        String syntax = "SELECT * FROM" + tblname;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor objofcursor = db.rawQuery(syntax,null);
+
+        if(objofcursor.moveToFirst()){
+            do{
+                Names namesobj = new Names();
+                namesobj.setId(Integer.parseInt(objofcursor.getString(0)));
+                namesobj.setName(objofcursor.getString(1));
+
+                listobj.add(namesobj);
+            } while(objofcursor.moveToNext());
+        }
+
+        return listobj;
+
+    }
 }
